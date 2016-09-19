@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 import json
 import requests
 
-
 class DictObject(dict):
     __getattr__ = dict.get
     __setattr__ = dict.__setitem__
