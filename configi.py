@@ -87,7 +87,7 @@ class S3ConfigSource(DynamicConfigSource):
         contents = self.get_all()
         contents[key] = value
         
-        if 's3.Object' in self.k.__class_:
+        if 's3.Object' in self.k.__class__.__name__:
             output = StringIO()
             json.dump(contents, output)
             output.seek(0)
@@ -99,7 +99,7 @@ class S3ConfigSource(DynamicConfigSource):
         contents = self.get_all()
         del contents[key]
 
-        if 's3.Object' in self.k.__class__:
+        if 's3.Object' in self.k.__class__.__name__:
             output = StringIO()
             json.dump(contents, output)
             output.seek(0)
@@ -108,7 +108,7 @@ class S3ConfigSource(DynamicConfigSource):
             self.k.set_contents_from_string(json.dumps(contents))
 
     def get_all(self):
-        if 's3.Object' in self.k.__class__:
+        if 's3.Object' in self.k.__class__.__name__:
             return json.loads(self.k.get()['Body'].decode('utf-8'))
         return json.loads(self.k.get_contents_as_string())
 
