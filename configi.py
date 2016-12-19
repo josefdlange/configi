@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 import json
 import requests
+from StringIO import StringIO
 
 class DictObject(dict):
     __getattr__ = dict.get
@@ -85,14 +86,30 @@ class S3ConfigSource(DynamicConfigSource):
     def set(self, key, value):
         contents = self.get_all()
         contents[key] = value
-        self.k.set_contents_from_string(json.dumps(contents))
+        
+        if 's3.Object' in self.k.__class_:
+            output = StringIO()
+            json.dump(contents, output)
+            output.seek(0)
+            self.k.put(Body=output)
+        else:
+            self.k.set_contents_from_string(json.dumps(contents))
 
     def delete(self, key):
         contents = self.get_all()
         del contents[key]
-        self.k.set_contents_from_string(json.dumps(contents))
+
+        if 's3.Object' in self.k.__class__:
+            output = StringIO()
+            json.dump(contents, output)
+            output.seek(0)
+            self.k.put(Body=output)
+        else:
+            self.k.set_contents_from_string(json.dumps(contents))
 
     def get_all(self):
+        if 's3.Object' in self.k.__class__:
+            return json.loads(self.k.get()['Body'].decode('utf-8'))
         return json.loads(self.k.get_contents_as_string())
 
 
