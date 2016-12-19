@@ -176,7 +176,7 @@ class DynamicConfig(object):
                 raise DynamicConfigError("Could not get key {}".format(key))
 
         if value is None:
-            if isinstance(self.defaults, DynamicConfigSource):
+            if isinstance(self.defaults, DynamicConfig):
                 value = self.defaults.__getattr__(key)
             value = self.defaults.get(key)
 
