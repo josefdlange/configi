@@ -8,7 +8,7 @@ class DictObject(dict):
     __setattr__ = dict.__setitem__
 
     def __init__(self, obj, nest=False):
-        super(DictObject, self).__init__()
+        super(DictObject, self).__init__(obj)
         if nest:
             for k, v in obj.items():
                 if isinstance(v, dict):
