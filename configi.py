@@ -10,7 +10,7 @@ class DictObject(dict):
     def __init__(self, obj, nest=False):
         super(DictObject, self).__init__()
         if nest:
-            for k, v in obj.items:
+            for k, v in obj.items():
                 if isinstance(v, dict):
                     self[k] = DictObject(v, nest=True)
 
@@ -156,6 +156,7 @@ class DynamicConfig(object):
 
     def __getattr__(self, key):
         if key in DynamicConfig.intrinsic_keys:
+            print ""
             return super(DynamicConfig, self).__getattribute__(key)
 
         value = None
