@@ -109,7 +109,7 @@ class S3ConfigSource(DynamicConfigSource):
 
     def get_all(self):
         if 's3.Object' in self.k.__class__.__name__:
-            return json.loads(self.k.get()['Body'].decode('utf-8'))
+            return json.loads(self.k.get()['Body'].read().decode('utf-8'))
         return json.loads(self.k.get_contents_as_string())
 
 
