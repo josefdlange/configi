@@ -177,8 +177,9 @@ class DynamicConfig(object):
 
         if value is None:
             if isinstance(self.defaults, DynamicConfig):
-                value = self.defaults.__getattr__(key)
-            value = self.defaults.get(key)
+                value = getattr(self.defaults, key)
+            else:
+                value = self.defaults.get(key)
 
         if self.namespace_dicts and isinstance(value, dict):
             value = DictObject(value, nest=True)
