@@ -7,6 +7,13 @@ class DictObject(dict):
     __getattr__ = dict.get
     __setattr__ = dict.__setitem__
 
+    def __init__(self, obj, nest=False):
+        super(DictObject, self).__init__()
+        if nest:
+            for k, v in obj.items:
+                if isinstance(v, dict):
+                    self[k] = DictObject(v, nest=True)
+
 
 class DynamicConfigSource(object):
     full_fetch_required = False
@@ -114,7 +121,7 @@ class S3ConfigSource(DynamicConfigSource):
 
 
 class DynamicConfig(object):
-    intrinsic_keys = ['get', 'delete', 'all_values', 'source', 'expiry', 'cache', 'quiet_mode', 'namespace_dicts', 'defaults']
+    intrinsic_keys = ['source', 'expiry', 'cache', 'quiet_mode', 'namespace_dicts', 'defaults']
 
     def __init__(self, source, expiry=300, quiet_mode=True, namespace_dicts=True, defaults=None):
         self.source = source
@@ -169,10 +176,12 @@ class DynamicConfig(object):
                 raise DynamicConfigError("Could not get key {}".format(key))
 
         if value is None:
+            if isinstance(self.defaults, DynamicConfigSource):
+                value = self.defaults.__getattr__(key)
             value = self.defaults.get(key)
 
         if self.namespace_dicts and isinstance(value, dict):
-            value = DictObject(value)
+            value = DictObject(value, nest=True)
 
         return value
 
