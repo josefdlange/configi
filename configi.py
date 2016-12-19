@@ -183,10 +183,7 @@ class DynamicConfig(object):
                 value = self.defaults.get(key)
 
         if self.namespace_dicts and isinstance(value, dict):
-            print "DictObjecting"
-            print value
             value = DictObject(value, nest=True)
-            print value
 
         return value
 
