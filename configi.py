@@ -114,7 +114,7 @@ class S3ConfigSource(DynamicConfigSource):
 
 
 class DynamicConfig(object):
-    intrinsic_keys = ['source', 'expiry', 'cache', 'quiet_mode', 'namespace_dicts', 'defaults']
+    intrinsic_keys = ['get', 'delete', 'all_values', 'source', 'expiry', 'cache', 'quiet_mode', 'namespace_dicts', 'defaults']
 
     def __init__(self, source, expiry=300, quiet_mode=True, namespace_dicts=True, defaults=None):
         self.source = source
